@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar/Navbar";
+import PrivateRoute from "./hoc/PrivateRoute";
+import AppTheme from "./lib/theme";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./lib/firebase";
+import { useAppDispatch } from "./hooks";
+import { userPersistence } from "./store/userSlice";
+const RegisterPage = React.lazy(
+  () => import("./pages/RegisterPage/RegisterPage")
+);
+const ProfilePage = React.lazy(() => import("./pages/ProfilePage/ProfilePage"));
+const LoginPage = React.lazy(() => import("./pages/LoginPage/LoginPage"));
+const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
 
-function App() {
+const App = () => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    onAuthStateChanged(auth, (response) => {
+      if (response) {
+        dispatch(
+          userPersistence({
+            email: response.email,
+            auth: true,
+            error: "",
+            uid: response.uid,
+          })
+        );
+      }
+    });
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={AppTheme}>
+      <CssBaseline />
+      <Suspense>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navbar />}>
+              <Route index element={<HomePage />}></Route>
+              <Route path="/login" element={<LoginPage />}></Route>
+              <Route path="/register" element={<RegisterPage />}></Route>
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <ProfilePage />
+                  </PrivateRoute>
+                }
+              ></Route>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </Suspense>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
