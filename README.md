@@ -6,4 +6,4 @@ Includes:
 
 1. Browser persistence.
 2. Responsive UI
-3. Theming **?**
+3. Theming **[WIP]**

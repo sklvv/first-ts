@@ -35,7 +35,12 @@ const LoginPage = () => {
       </Box>
       {error.length !== 0 ? <CustomError>{error}</CustomError> : <></>}
       <Box sx={styles.form_container}>
-        <form onSubmit={(e) => handleSubmit(e)} style={styles.form_items}>
+       
+        <Box
+          component="form"
+          sx={styles.form_items}
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
+        >
           <input
             type="email"
             placeholder="Email"
@@ -51,11 +56,13 @@ const LoginPage = () => {
             required={true}
           />
           <button style={styles.btn}>
-            <Button variant="outlined" sx={{ width: "100%" }}>
+            <Button component="span" variant="outlined" sx={{ width: "100%" }}>
               Log in
             </Button>
           </button>
-        </form>
+        </Box>
+
+        
       </Box>
       <Box sx={styles.redirect}>
         Or create an <Link to="/register"> account</Link>

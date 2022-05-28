@@ -4,11 +4,12 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { ref, set } from "firebase/database";
+import { get, ref, set } from "firebase/database";
 import { database } from "../lib/firebase";
 import { ILogin } from "../types/loginTypes";
 import { IRegister } from "../types/registerTypes";
 import { IUser } from "../types/userTypes";
+import { INote } from "../types/notesTypes";
 
 export const UserLogIn = createAsyncThunk<
   IUser,
@@ -16,13 +17,14 @@ export const UserLogIn = createAsyncThunk<
   { rejectValue: string }
 >("user/UserLogIn", async ({ email, password }, { rejectWithValue }) => {
   const req = await signInWithEmailAndPassword(auth, email, password);
+  const reqNotes = await get(ref(database, `users/${req.user.uid}/notes`));
   const response: IUser = {
     auth: true,
     email: req.user.email,
     uid: req.user.uid,
+    notes: reqNotes.val(),
     error: "",
   };
-
   return response;
 });
 
@@ -36,14 +38,33 @@ export const UserRegister = createAsyncThunk<
     auth: true,
     email: req.user.email,
     uid: req.user.uid,
+    notes: [],
     error: "",
   };
   set(ref(database, "users/" + req.user.uid), {
     email: req.user.email,
     uid: req.user.uid,
+    notes: [],
   });
   return response;
 });
+
+export const addNote = createAsyncThunk<INote, INote>(
+  "user/addNote",
+  async ({ body, category, id }) => {
+    await set(ref(database, `user/uid`), {
+      body,
+      category,
+      id,
+    });
+    const response: INote = {
+      body,
+      category,
+      id,
+    };
+    return response;
+  }
+);
 
 // export const UserLogIn = createAsyncThunk<Promise<void>, ILogin>(
 //   "user/UserLogIn",
@@ -62,7 +83,7 @@ export const UserRegister = createAsyncThunk<
 const initialState: IUser = {
   auth: false,
   email: "",
-
+  notes: [],
   uid: "",
   error: "",
 };

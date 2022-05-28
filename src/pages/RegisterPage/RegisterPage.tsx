@@ -78,7 +78,7 @@ const RegisterPage = () => {
             onChange={(e) => handleConfPass(e.target.value)}
           />
           <button style={styles.btn}>
-            <Button variant="outlined" sx={styles.muiBtn}>
+            <Button component="span" variant="outlined" sx={styles.muiBtn}>
               Create an account
             </Button>
           </button>

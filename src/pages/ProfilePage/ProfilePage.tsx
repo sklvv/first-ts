@@ -1,16 +1,21 @@
 import { styles } from "./styles";
 import React from "react";
 import { useAppSelector } from "../../hooks";
-import { Box } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
+import DescCreateNote from "../../components/DecsCreateNote/DescCreateNote";
+import MobileCreateNote from "../../components/MobileCreateNote/MobileCreateNote";
 
 const ProfilePage = () => {
   const { email, uid } = useAppSelector((state) => state.user);
   return (
-    <>
-      <Box>ProfilePage</Box>
-      <Box> {email}</Box>
-      <Box>{uid}</Box>
-    </>
+    <Box>
+      <DescCreateNote />
+      <MobileCreateNote />
+      <Typography variant="h5" sx={{ textAlign: "start" }}>
+        Notes
+      </Typography>
+      <Divider />
+    </Box>
   );
 };
 

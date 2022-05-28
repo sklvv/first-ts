@@ -25,6 +25,7 @@ const App = () => {
             email: response.email,
             auth: true,
             error: "",
+            notes: [],
             uid: response.uid,
           })
         );

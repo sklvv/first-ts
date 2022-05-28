@@ -1,6 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "./loginSlice";
 import navbarSlice from "./navbarSlice";
+import notesPageSlice from "./notesPageSlice";
+import notesSlice from "./notesSlice";
 import registerSlice from "./registerSlice";
 import userSlice from "./userSlice";
 
@@ -10,6 +12,8 @@ const store = configureStore({
     login: loginSlice,
     user: userSlice,
     navbar: navbarSlice,
+    notes: notesSlice,
+    notesPage: notesPageSlice,
   },
 });
 export default store;
